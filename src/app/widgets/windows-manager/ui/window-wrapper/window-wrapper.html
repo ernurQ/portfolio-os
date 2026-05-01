@@ -1,0 +1,70 @@
+<style>
+  :host {
+    position: absolute;
+    overflow: hidden;
+  }
+</style>
+
+<section
+  class="flex flex-col rounded-2xl overflow-hidden border border-white/40 bg-white/30 backdrop-blur-xs w-full h-full"
+>
+  <header
+    class="flex items-center justify-between p-3 bg-white/20 border-b border-white/20 backdrop-blur-md"
+    cdkDragHandle
+  >
+    <div class="flex items-center gap-2">
+      <h2 class="ml-2 text-gray-800 font-medium text-sm select-none uppercase tracking-wider">
+        {{ app.title }}
+      </h2>
+    </div>
+
+    <button
+      (click)="onClose()"
+      (mousedown)="$event.stopPropagation()"
+      class="w-6 h-6 flex items-center justify-center rounded-full hover:bg-[#D6545B]/20 text-[#D6545B] transition-colors group"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-4 h-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+  </header>
+
+  <main class="grow">
+    @if (isAppComponentPending()) {
+      <div class="flex flex-col items-center justify-center h-full gap-3 opacity-60">
+        <div
+          class="w-8 h-8 border-4 border-[#ABD7D2] border-t-transparent rounded-full animate-spin"
+        ></div>
+        <p class="text-sm font-medium">Загрузка...</p>
+      </div>
+    } @else if (isAppComponentError()) {
+      <div class="flex flex-col items-center justify-center h-full text-center p-6">
+        <p class="text-[#D6545B] mb-4">Не удалось загрузить приложение.</p>
+        <button
+          (click)="ngOnInit()"
+          class="px-4 py-2 bg-white/50 hover:bg-white/80 rounded-lg border border-white/40 transition-all text-sm"
+        >
+          Повторить попытку
+        </button>
+      </div>
+    } @else if (appComponent(); as comp) {
+      <ng-container *ngComponentOutlet="comp" />
+    }
+  </main>
+</section>
+
+<div
+  class="w-5 h-5 absolute right-0 bottom-0 cursor-nwse-resize z-10 group"
+  (mousedown)="initResize($event)"
+></div>

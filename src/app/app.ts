@@ -1,12 +1,11 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { WindowsManager } from '~/widgets/windows-manager';
+import { Dock } from '~/widgets/dock/dock';
+import { Desktop } from '~/widgets/desktop/desktop';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  imports: [WindowsManager, Dock, Desktop],
+  template: `<app-desktop /> <app-windows-manager /> <app-dock />`,
 })
-export class App {
-  protected readonly title = signal('portfolio-os');
-}
+export class App {}

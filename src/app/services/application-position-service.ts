@@ -18,22 +18,30 @@ export class ApplicationPositionService {
     }
   }
 
-  getApplicationPosition(appId: ApplicationId, appSize: ApplicationSize): ApplicationPosition {
+  getApplicationPosition(
+    appId: ApplicationId,
+    appSize: ApplicationSize,
+    offset: number = 0,
+  ): ApplicationPosition {
     const position = this._applicationPositions[appId];
-
-    if (!position) {
-      return {
-        x: Math.max(0, (window.innerWidth - appSize.width) / 2),
-        y: Math.max(0, (window.innerHeight - appSize.height) / 2),
-      };
-    }
 
     const maxX = window.innerWidth - appSize.width;
     const maxY = window.innerHeight - appSize.height;
 
+    let targetX = 0;
+    let targetY = 0;
+
+    if (!position) {
+      targetX = (window.innerWidth - appSize.width) / 2;
+      targetY = (window.innerHeight - appSize.height) / 2;
+    } else {
+      targetX = position.x;
+      targetY = position.y;
+    }
+
     return {
-      x: Math.max(0, Math.min(position.x, maxX)),
-      y: Math.max(0, Math.min(position.y, maxY)),
+      x: Math.max(0, Math.min(targetX + offset, maxX)),
+      y: Math.max(0, Math.min(targetY + offset, maxY)),
     };
   }
 

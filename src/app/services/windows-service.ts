@@ -62,10 +62,14 @@ export class WindowsService {
       width: app.options.defaultWidth,
       height: app.options.defaultHeight,
     });
+
+    const offset = openedAppInstances.length * 10;
     const initialPosition = this.applicationPositionService.getApplicationPosition(
       appId,
       initialSize,
+      offset,
     );
+
     const newWindow: Window = {
       id: crypto.randomUUID(),
       appId,

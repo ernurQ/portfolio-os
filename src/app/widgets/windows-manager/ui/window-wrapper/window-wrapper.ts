@@ -63,6 +63,10 @@ export class WindowWrapper implements OnInit {
   }
 
   initResize(e: MouseEvent) {
+    if (!this.app.options.isResizable) {
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
 
@@ -73,13 +77,39 @@ export class WindowWrapper implements OnInit {
 
     const minW = this.app.options.minWidth;
     const minH = this.app.options.minHeight;
+    const preserveRatio = this.app.options.preserveAspectRatio;
+    const aspectRatio = startWidth / startHeight;
 
     const onMouseMove = (moveEvent: MouseEvent) => {
-      const newWidth = startWidth + (moveEvent.clientX - startX);
-      const newHeight = startHeight + (moveEvent.clientY - startY);
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
 
-      if (newWidth >= minW) this.width.set(newWidth);
-      if (newHeight >= minH) this.height.set(newHeight);
+      let newWidth = startWidth + deltaX;
+      let newHeight = startHeight + deltaY;
+
+      if (preserveRatio) {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          newHeight = newWidth / aspectRatio;
+        } else {
+          newWidth = newHeight * aspectRatio;
+        }
+
+        if (newWidth < minW || newHeight < minH) {
+          if (minW / aspectRatio > minH) {
+            newWidth = minW;
+            newHeight = newWidth / aspectRatio;
+          } else {
+            newHeight = minH;
+            newWidth = newHeight * aspectRatio;
+          }
+        }
+
+        this.width.set(newWidth);
+        this.height.set(newHeight);
+      } else {
+        if (newWidth >= minW) this.width.set(newWidth);
+        if (newHeight >= minH) this.height.set(newHeight);
+      }
     };
 
     const onMouseUp = () => {

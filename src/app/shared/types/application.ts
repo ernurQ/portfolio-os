@@ -23,5 +23,7 @@ export interface Application {
     minHeight: number;
     maxInstances: number;
     isPinnedInDock: boolean;
+    isResizable: boolean;
+    preserveAspectRatio: boolean;
   };
 }

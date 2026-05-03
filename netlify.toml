@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/anglify"
+  publish = "dist/portfolio-os"
   command = "ng build"
 [[redirects]]
   from = "/*"

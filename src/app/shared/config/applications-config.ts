@@ -39,6 +39,8 @@ export const applicationsConfig: Array<ApplicationConfig> = [
     options: {
       maxInstances: 10,
       preserveAspectRatio: true,
+      defaultWidth: 400,
+      defaultHeight: 500,
     },
   },
 ];

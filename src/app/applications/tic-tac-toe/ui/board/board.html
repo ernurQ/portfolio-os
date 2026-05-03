@@ -1,0 +1,98 @@
+@if (game(); as state) {
+  <div class="flex flex-col items-center w-full max-w-sm">
+    <div class="flex justify-between items-center w-full mb-6 px-2">
+      <div class="flex flex-col">
+        <span class="text-xs text-gray-500 uppercase tracking-wider"
+          >Комната</span
+        >
+        <span class="font-mono font-semibold">{{ state.roomCode }}</span>
+      </div>
+      <div class="flex flex-col items-end">
+        <span class="text-xs text-gray-500 uppercase tracking-wider"
+          >Твоя роль</span
+        >
+        <span
+          class="font-bold text-lg"
+          [class.text-blue-500]="me() === 'X'"
+          [class.text-rose-500]="me() === 'O'"
+        >
+          {{ me() }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-6 h-8 flex items-center justify-center">
+      @if (state.winner) {
+        <div class="text-xl font-bold animate-pulse">
+          @if (state.winner === 'draw') {
+            <span class="text-gray-600">Ничья! 🤝</span>
+          } @else if (state.winner === me()) {
+            <span class="text-green-500">Вы выиграли! 🎉</span>
+          } @else {
+            <span class="text-rose-500">Вы проиграли 😢</span>
+          }
+        </div>
+      } @else if (state.isProcessingMove) {
+        <span class="text-lg font-medium text-gray-600 flex items-center gap-2">
+          <svg
+            class="animate-spin h-5 w-5 text-gray-500"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Отправка...
+        </span>
+      } @else if (state.isMyTurn) {
+        <span
+          class="text-lg font-medium text-green-600 bg-green-100/50 px-3 py-1 rounded-full"
+        >
+          Твой ход
+        </span>
+      } @else {
+        <span class="text-lg text-gray-500 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-gray-400 animate-ping"></span>
+          Ожидание противника...
+        </span>
+      }
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 w-64">
+      @for (cell of board(); track $index) {
+        <button
+          (click)="onCellClick($index)"
+          [disabled]="isCellDisabled(cell)"
+          class="aspect-square bg-white/40 hover:bg-white/70 disabled:hover:bg-white/40 rounded-2xl flex items-center justify-center text-5xl font-bold cursor-pointer disabled:cursor-not-allowed transition-all shadow-sm border border-white/20"
+          [class.text-blue-500]="cell === 'X'"
+          [class.text-rose-500]="cell === 'O'"
+        >
+          {{ cell }}
+        </button>
+      }
+    </div>
+
+    @if (state.isGameOver) {
+      <div class="mt-8 animate-fade-in">
+        <button
+          (click)="onLeaveGame()"
+          class="py-2 px-6 bg-white/60 hover:bg-red-100 hover:text-red-600 rounded-xl shadow-sm transition-all backdrop-blur-sm font-medium text-gray-800 border border-transparent hover:border-red-200"
+        >
+          Вернуться в меню
+        </button>
+      </div>
+    }
+  </div>
+}

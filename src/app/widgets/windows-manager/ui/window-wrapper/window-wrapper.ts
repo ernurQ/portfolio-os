@@ -47,7 +47,6 @@ export class WindowWrapper implements OnInit {
     this.isAppComponentError.set(false);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       const component = await this.app.loadComponent();
       this.appComponent.set(component);
     } catch (error) {

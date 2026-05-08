@@ -6,14 +6,16 @@
 </style>
 
 <section
-  class="flex flex-col rounded-2xl overflow-hidden border border-white/40 bg-white/30 backdrop-blur-xs w-full h-full"
+  class="flex flex-col rounded-2xl overflow-hidden border border-white/40 bg-white/30 backdrop-blur-xs w-full h-full transition-transform duration-200 ease-out opacity-100 scale-100 starting:opacity-0 starting:scale-90"
 >
   <header
     class="flex items-center justify-between p-3 bg-white/20 border-b border-white/20 backdrop-blur-md"
     cdkDragHandle
   >
     <div class="flex items-center gap-2">
-      <h2 class="ml-2 text-gray-800 font-medium text-sm select-none uppercase tracking-wider">
+      <h2
+        class="ml-2 text-gray-800 font-medium text-sm select-none uppercase tracking-wider"
+      >
         {{ app.title }}
       </h2>
     </div>
@@ -42,14 +44,18 @@
 
   <main class="grow">
     @if (isAppComponentPending()) {
-      <div class="flex flex-col items-center justify-center h-full gap-3 opacity-60">
+      <div
+        class="flex flex-col items-center justify-center h-full gap-3 opacity-60"
+      >
         <div
           class="w-8 h-8 border-4 border-[#ABD7D2] border-t-transparent rounded-full animate-spin"
         ></div>
         <p class="text-sm font-medium">Загрузка...</p>
       </div>
     } @else if (isAppComponentError()) {
-      <div class="flex flex-col items-center justify-center h-full text-center p-6">
+      <div
+        class="flex flex-col items-center justify-center h-full text-center p-6"
+      >
         <p class="text-[#D6545B] mb-4">Не удалось загрузить приложение.</p>
         <button
           (click)="ngOnInit()"

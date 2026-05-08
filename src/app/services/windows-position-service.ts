@@ -37,6 +37,18 @@ export class WindowsPositionService {
     localStorage.setItem(this._storageKey, JSON.stringify(this._store));
   }
 
+  syncWindowsStore(windowsIds: Array<{ id: WindowId }>) {
+    const activeWindowIdsSet = new Set(windowsIds.map(({ id }) => id));
+    const newStoreWindows: WindowPositionStore['windows'] = {};
+    Object.entries(this._store.windows).forEach(([storeWindowId, position]) => {
+      if (activeWindowIdsSet.has(storeWindowId)) {
+        newStoreWindows[storeWindowId] = position;
+      }
+    });
+    this._store.windows = newStoreWindows;
+    localStorage.setItem(this._storageKey, JSON.stringify(this._store));
+  }
+
   private loadStore(): WindowPositionStore {
     const defaultStore: WindowPositionStore = {
       windows: {},

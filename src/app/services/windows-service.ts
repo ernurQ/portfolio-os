@@ -27,6 +27,7 @@ export class WindowsService {
         windowId: window.id,
       });
     });
+    this.windowPositionService.syncWindowsStore(savedWindows);
 
     effect(() => {
       const windows = this._openedWindows();
@@ -77,6 +78,13 @@ export class WindowsService {
       initialSize,
       initialPosition,
     };
+
+    if (!options.windowId) {
+      this.windowPositionService.saveWindowPosition(
+        newWindow.id,
+        newWindow.initialPosition,
+      );
+    }
 
     this._openedWindows.update((state) => ({
       ...state,

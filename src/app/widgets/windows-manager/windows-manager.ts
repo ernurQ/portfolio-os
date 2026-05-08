@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { WindowWrapper } from './ui/window-wrapper/window-wrapper';
 import { WindowsService } from '~/services/windows-service';
 import { CdkDrag, CdkDragEnd } from '@angular/cdk/drag-drop';
-import { WindowId } from '~/shared/types/window';
-import { ApplicationId } from '~/shared/types/application';
+import { Window, WindowId } from '~/shared/types/window';
 import { ApplicationPositionService } from '~/services/application-position-service';
+import { WindowsPositionService } from '~/services/windows-position-service';
 
 @Component({
   selector: 'app-windows-manager',
@@ -20,7 +20,7 @@ import { ApplicationPositionService } from '~/services/application-position-serv
           [style.z-index]="win.zIndex"
           cdkDrag
           [cdkDragFreeDragPosition]="win.initialPosition"
-          (cdkDragEnded)="onDragEnded($event, win.appId)"
+          (cdkDragEnded)="onDragEnded($event, win)"
           (closed)="close(win.id)"
           (mousedown)="onMouseDown(win.id)"
         />
@@ -30,7 +30,10 @@ import { ApplicationPositionService } from '~/services/application-position-serv
 })
 export class WindowsManager {
   private readonly windowsService = inject(WindowsService);
-  private readonly applicationPositionService = inject(ApplicationPositionService);
+  private readonly windowPositionService = inject(WindowsPositionService);
+  private readonly applicationPositionService = inject(
+    ApplicationPositionService,
+  );
 
   readonly windows = this.windowsService.windowsList;
 
@@ -42,8 +45,12 @@ export class WindowsManager {
     this.windowsService.focusWindow(windowId);
   }
 
-  onDragEnded(event: CdkDragEnd, appId: ApplicationId) {
+  onDragEnded(event: CdkDragEnd, window: Window) {
     const newPosition = event.source.getFreeDragPosition();
-    this.applicationPositionService.setApplicationPosition(appId, newPosition);
+    this.windowPositionService.saveWindowPosition(window.id, newPosition);
+    this.applicationPositionService.saveApplicationPosition(
+      window.appId,
+      newPosition,
+    );
   }
 }

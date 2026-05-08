@@ -67,6 +67,7 @@ export class PlayerSessionService {
 
   finishSession(roomCode: RoomCode) {
     const store = this.parseStorage();
+    if (!store.rooms[roomCode]) return;
     const newStore: PlayerSessionStore = {
       ...store,
       rooms: {
